@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>images</h2>
+
+<div class="table-responsive">
+{% if not items %}
+    <p>Item not found.</p>
+{% else %}
+    {% include "_pagination.html" with items=items %}
+    <table class="table" style="border:solid 1px black">
+    <thead>
+        <tr>
+            <th>image</th>
+            <th>Violence(暴力表現)</th>
+            <th>Adult(アダルト)</th>
+            <th>spoof(なりすまし)</th>
+            <th>medical(グロ)</th>
+            <th>page title</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+        <tr>
+            <td><a href="{{ item.url }}"><img src="{{ item.url }}" alt="" width="200" /></a></td>
+            <td>{{ item.evalue_violence }}</td>
+            <td>{{ item.evalue_adult }}</td>
+            <td>{{ item.evalue_spoof }}</td>
+            <td>{{ item.evalue_medical }}</td>
+            <td>
+                <a href="{{ item.page_url }}">{{ item.page_title }}</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% include "_pagination.html" with items=items %}
+{% endif %}
+</div>
+
+{% endblock %}

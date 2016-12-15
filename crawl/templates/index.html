@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>sites</h1>
+{% for site in sites %}
+    <p><a href="{% url 'crawl:image_list' site.site_name %}">{{ site.site_name }}({{ site.icount }})</a></p>
+{% endfor %}
+
+{% endblock %}
