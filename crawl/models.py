@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Case, When, Value, IntegerField
 
 
 class Item(models.Model):
@@ -48,5 +48,43 @@ def get_sitenames():
     return Item.objects.values('site_name').annotate(icount=Count('site_name'))
 
 
-def get_images_by_sitename(sitename):
-    return Item.objects.filter(site_name=sitename)
+def get_images_by_sitename(sitename, sort='v'):
+
+    if sort == 'v':
+        order = '-eval_violence'
+    elif sort == 'a':
+        order = '-eval_adult'
+    elif sort == 's':
+        order = '-eval_spoof'
+    else:
+        order = '-eval_medical'
+
+    return Item.objects.filter(site_name=sitename).annotate(
+            eval_violence=Case(When(violence='VERY_UNLIKELY', then=Value(1)),
+                               When(violence='UNLIKELY', then=Value(2)),
+                               When(violence='POSSIBLE', then=Value(3)),
+                               When(violence='LIKELY', then=Value(4)),
+                               When(violence='VERY_LIKELY', then=Value(5)),
+                               default=Value(0), output_field=IntegerField()),
+            eval_adult=Case(When(adult='VERY_UNLIKELY', then=Value(1)),
+                            When(adult='UNLIKELY', then=Value(2)),
+                            When(adult='POSSIBLE', then=Value(3)),
+                            When(adult='LIKELY', then=Value(4)),
+                            When(adult='VERY_LIKELY', then=Value(5)),
+                            default=Value(0), output_field=IntegerField()),
+            eval_spoof=Case(When(spoof='VERY_UNLIKELY', then=Value(1)),
+                            When(spoof='UNLIKELY', then=Value(2)),
+                            When(spoof='POSSIBLE', then=Value(3)),
+                            When(spoof='LIKELY', then=Value(4)),
+                            When(spoof='VERY_LIKELY', then=Value(5)),
+                            default=Value(0), output_field=IntegerField()),
+            eval_medical=Case(When(medical='VERY_UNLIKELY', then=Value(1)),
+                              When(medical='UNLIKELY', then=Value(2)),
+                              When(medical='POSSIBLE', then=Value(3)),
+                              When(medical='LIKELY', then=Value(4)),
+                              When(medical='VERY_LIKELY', then=Value(5)),
+                              default=Value(0), output_field=IntegerField()),
+            ).values('name', 'url', 'violence', 'adult', 'spoof', 'medical',
+                     'page_title', 'page_url', 'site_name', 'created_at', 'updated_at',
+                     'eval_violence', 'eval_adult', 'eval_spoof', 'eval_medical'
+            ).order_by(order)

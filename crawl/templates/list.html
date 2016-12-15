@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block head %}
 <style>
@@ -17,7 +16,7 @@ a.pop span {
   left: 0;
 }
 a.pop:hover span {
-  border: 2px solid black;
+  border: none;
   display: block;
   width: 300px;
 }
@@ -28,9 +27,9 @@ a.pop:hover span {
 
 <h2>images</h2>
 
+<div><a href="{% url 'crawl:index' %}">back</a></div>
+
 <div class="table-responsive">
- {% static 'img/level1.png' %}
- <img src="{% static 'img/level1.png' %}" />
 {% if not items %}
     <p>Item not found.</p>
 {% else %}
@@ -39,10 +38,10 @@ a.pop:hover span {
     <thead>
         <tr>
             <th>image</th>
-            <th wrap>Violence<br />(暴力表現)</th>
-            <th>Adult<br />(アダルト)</th>
-            <th>spoof<br />(なりすまし)</th>
-            <th>medical<br />(グロ)</th>
+            <th><a href="{% url 'crawl:image_list' sitename 'v' %}">Violence<br />(暴力表現)</a></th>
+            <th><a href="{% url 'crawl:image_list' sitename 'a' %}">Adult<br />(アダルト)</a></th>
+            <th><a href="{% url 'crawl:image_list' sitename 's' %}">Spoof<br />(なりすまし)</a></th>
+            <th><a href="{% url 'crawl:image_list' sitename 'm' %}">Medical<br />(グロ)</a></th>
             <th>page title</th>
         </tr>
     </thead>
@@ -50,15 +49,12 @@ a.pop:hover span {
     {% for item in items %}
         <tr>
             <td><a href="{{ item.url }}" class="pop"><img src="{{ item.url }}" alt="" />
-                <span><img src="{{ item.url }}" alt="" /></span></a>
+                <span><img src="{{ item.url }}" alt="" width="300" /></span></a>
             </td>
-            <td>{% include "_level.html" with level=item.evalue_violence %}</td>
-            <td>###{{ item.evalue_violence|add:"aaa" }}</td>
-            <td><img src="{% static item.evalue_violence|stringformat:"img/level%d.png" %}" width="32" height="32" alt="{{ evalue_violence}}" />
-            <td>{{ item.evalue_violence }}</td>
-            <td>{{ item.evalue_adult }}</td>
-            <td>{{ item.evalue_spoof }}</td>
-            <td>{{ item.evalue_medical }}</td>
+            {% include "_level.html" with lv=item.eval_violence %}
+            {% include "_level.html" with lv=item.eval_adult %}
+            {% include "_level.html" with lv=item.eval_spoof %}
+            {% include "_level.html" with lv=item.eval_medical %}
             <td>
                 <a href="{{ item.page_url }}">{{ item.page_title }}</a>
             </td>

@@ -10,8 +10,8 @@ def index(request):
     return render(request, 'index.html', {'sites': get_sitenames()})
 
 
-def list(request, sitename, page='1'):
-    paginator = Paginator(get_images_by_sitename(sitename), 100)
+def list(request, sitename, page='1', sort='v'):
+    paginator = Paginator(get_images_by_sitename(sitename, sort), 100)
 
     try:
         items = paginator.page(page)
