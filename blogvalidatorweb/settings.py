@@ -26,12 +26,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 't7lzp6%c1(61v2o*i-rtrgu@h%%sesr-q^^#%na0)_is0!))u3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = [
-    'www.dondari.com',
-]
-
+DEBUG = False
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
