@@ -2,8 +2,25 @@
 {% block content %}
 
 <h1>sites</h1>
-{% for site in sites %}
-    <p><a href="{% url 'crawl:image_list' site.site_name %}">{{ site.site_name }}({{ site.icount }})</a></p>
-{% endfor %}
+<div class="table-responsive">
+{% if not sites %}
+    <p>Site not found.</p>
+{% else %}
+    <table class="table" style="border:solid 1px black">
+    <thead>
+        <tr>
+            <th>site name</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for site in sites %}
+        <tr>
+          <td><a href="{% url 'crawl:image_list' site.site_name %}">{{ site.site_name }}({{ site.icount }})</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endif %}
+</div>
 
 {% endblock %}

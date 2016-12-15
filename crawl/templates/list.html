@@ -1,9 +1,36 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+a.pop:hover {
+  position: relative;
+  text-decoration: none;
+}
+a.pop > img {
+  width: 100px;
+}
+a.pop span {
+  display: none;
+  position: absolute;
+  top: 1em;
+  left: 0;
+}
+a.pop:hover span {
+  border: 2px solid black;
+  display: block;
+  width: 300px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <h2>images</h2>
 
 <div class="table-responsive">
+ {% static 'img/level1.png' %}
+ <img src="{% static 'img/level1.png' %}" />
 {% if not items %}
     <p>Item not found.</p>
 {% else %}
@@ -12,17 +39,22 @@
     <thead>
         <tr>
             <th>image</th>
-            <th>Violence(暴力表現)</th>
-            <th>Adult(アダルト)</th>
-            <th>spoof(なりすまし)</th>
-            <th>medical(グロ)</th>
+            <th wrap>Violence<br />(暴力表現)</th>
+            <th>Adult<br />(アダルト)</th>
+            <th>spoof<br />(なりすまし)</th>
+            <th>medical<br />(グロ)</th>
             <th>page title</th>
         </tr>
     </thead>
     <tbody>
     {% for item in items %}
         <tr>
-            <td><a href="{{ item.url }}"><img src="{{ item.url }}" alt="" width="200" /></a></td>
+            <td><a href="{{ item.url }}" class="pop"><img src="{{ item.url }}" alt="" />
+                <span><img src="{{ item.url }}" alt="" /></span></a>
+            </td>
+            <td>{% include "_level.html" with level=item.evalue_violence %}</td>
+            <td>###{{ item.evalue_violence|add:"aaa" }}</td>
+            <td><img src="{% static item.evalue_violence|stringformat:"img/level%d.png" %}" width="32" height="32" alt="{{ evalue_violence}}" />
             <td>{{ item.evalue_violence }}</td>
             <td>{{ item.evalue_adult }}</td>
             <td>{{ item.evalue_spoof }}</td>
